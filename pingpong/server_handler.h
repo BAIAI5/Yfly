@@ -2,23 +2,22 @@
 #define EVENT_HANDLER_H
 
 #include <unordered_map>
+#include <mutex>
 
-enum EventType
-{
-    kConnectEvent = 0,
-    kTimeEvent,
-};
-
-class EventHandler
+class ServerHandler
 {
 public:
-    EventHandler();
-    ~EventHandler();
+    ServerHandler()
+    {
+        
+    }
+    ~ServerHandler();
     int HandleConnect(int server_fd);
-    void HandleTime(int timer_fd);
+    int HandleTime(int timer_fd);
 private:
     void SetTime(int timer_fd);
     std::unordered_map<int, int> fd_map;
+    std::mutex m;
 };
 
 #endif // EVENT_HANDLER_H

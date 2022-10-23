@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <arpa/inet.h>
+#include <assert.h>
 
 void ErrorHandling(const char *ErrorMsg)
 {
@@ -26,22 +27,21 @@ Server::Server(int port)
     
     if (listen(server_socket, 1024) < 0)
         ErrorHandling("listen() error");
-
-    server_epoll.EventRegister(server_socket);
-
-    // init epoll fd
-    // struct epoll_event event;
-    // event.events = EPOLLIN;
-    // event.data.fd = ServerSock;
-    // EpollFd = epoll_create(EpollSize);
-    // EpollEvents = (struct epoll_event *)malloc(sizeof(epoll_event) * EpollSize);
-    // epoll_ctl(EpollFd, EPOLL_CTL_ADD, ServerSock, &event);
 }
 
 void Server::run()
 {
     while (1)
     {
-        server_epoll.EventWait();
+        if (server_epoll.EventWait() < 0)
+            break;
     }
+}
+
+void Server::Accept()
+{
+    int client_socket = accept(server_socket, NULL, NULL);
+    assert(client_socket != -1);
+
+    server_epoll.EventRegister(client_socket);
 }

@@ -1,14 +1,14 @@
 #ifndef PINGPONG_SERVER_H
 #define PINGPONG_SERVER_H
 
-#include <server_epoll.h>
+#include "server_epoll.h"
 
 class Server
 {
 public:
     Server(int port);
     void run();
-
+    void Accept();
 private:
     int server_socket;
     ServerEpoll server_epoll;
