@@ -1,6 +1,6 @@
 #include "pingpong_server.h"
 
-#include <cstdio>
+#include <stdio.h>
 #include <arpa/inet.h>
 #include <assert.h>
 
@@ -33,15 +33,18 @@ void Server::run()
 {
     while (1)
     {
-        if (server_epoll.EventWait() < 0)
-            break;
+        server_epoll.EventWait();
     }
 }
 
 void Server::Accept()
 {
-    int client_socket = accept(server_socket, NULL, NULL);
-    assert(client_socket != -1);
+    while (1)
+    {
+        int client_socket = accept(server_socket, NULL, NULL);
+        assert(client_socket != -1);
 
-    server_epoll.EventRegister(client_socket);
+        printf("accept %d\n", client_socket);
+        server_epoll.EventRegister(client_socket);
+    }
 }

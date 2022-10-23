@@ -39,7 +39,7 @@ int ServerHandler::HandleConnect(int client_socket)
         fd_map[timer_fd] = client_socket;
     }
 
-    printf("connection num: %d\n", ++cnt_connet);
+    printf("hc connection num: %d\n", ++cnt_connet);
     printf("client_socket: %d timer_fd: %d\n", client_socket, timer_fd);
 
     return timer_fd;
@@ -54,7 +54,7 @@ int ServerHandler::HandleTime(int timer_fd)
     int client_socket;
     const int BUF_SIZE = 1024;
     char buf[BUF_SIZE];
-
+    
     {
         std::lock_guard<std::mutex> guard(m);
         client_socket = fd_map[timer_fd];
@@ -67,7 +67,7 @@ int ServerHandler::HandleTime(int timer_fd)
     write(client_socket, send_msg, strlen(send_msg));
 
     printf("%d\n", ++cnt_time);
-    if (cnt_time % cnt_connet == 0)
+    if (cnt_connet > 1 && cnt_time % cnt_connet == 0)
     {
         printf("connection num: %d\n", cnt_connet);
     }
@@ -79,7 +79,7 @@ int ServerHandler::HandleTime(int timer_fd)
         recv_cnt = read(client_socket, &buf[recv_len], BUF_SIZE);
         recv_len += recv_cnt;
         assert(recv_len < 10);
-        if (cnt++ < 10 || recv_cnt == -1)
+        if (cnt++ > 10 || recv_cnt == -1)
         {
             printf("client %d closed\n", client_socket);
             close(client_socket);

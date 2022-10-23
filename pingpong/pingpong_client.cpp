@@ -7,7 +7,7 @@
 #include <string.h>
 
 
-const int Client::max_connection = 2010;
+const int Client::max_connection = 500;
 
 Client::Client(std::vector<std::string> &ip)
 : client_ip(ip), epoll_fd(-1)
@@ -69,8 +69,9 @@ void Client::Connect(const char * server_ip, int server_port)
 
             sockets.push_back(sock);
             EventRegister(sock);
+            printf("pingpong_client connect %d\n", sock);
 
-            if (sockets.size() % 500 == 0)
+            if (sockets.size() % 100 == 0)
                 sleep(1);
         }
     }

@@ -39,8 +39,7 @@ int ServerEpoll::EventWait()
     assert(event_num != -1);
     for (int i = 0; i < event_num; ++i)
     {
-        if (server_handler.HandleTime(events[i].data.fd) < 0)
-            return -1;
+        server_handler.HandleTime(events[i].data.fd);
     }
     return 1;
 }
