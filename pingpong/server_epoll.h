@@ -2,6 +2,7 @@
 #define EPOLL_H
 
 #include <vector>
+#include <sys/epoll.h>
 #include "server_handler.h"
 
 class ServerEpoll
